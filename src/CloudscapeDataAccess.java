@@ -4,6 +4,7 @@
 
 // Java core packages
 import java.sql.*;
+import java.util.List;
 
 public class CloudscapeDataAccess
         implements AddressBookDataAccess {
@@ -152,7 +153,7 @@ public class CloudscapeDataAccess
 
    // Locate specified person. Method returns AddressBookEntry
    // containing information.
-   public AddressBookEntry findPerson( String lastName )
+   public AddressBookEntry findPerson(String lastName )
    {
       try {
          // set query parameter and execute query

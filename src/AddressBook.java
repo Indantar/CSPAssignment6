@@ -11,6 +11,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 // Java core packages
 // Java extension packages
@@ -343,32 +345,36 @@ public class AddressBook extends JFrame {
 
          // if last name was input, search for it; otherwise,
          // do nothing
-         if ( lastName != null ) {
+         List<AddressBookEntry> personList = new ArrayList<>();
+         if ( lastName != null )
+         {
 
             // Execute search. If found, AddressBookEntry
             // is returned containing data.
-            AddressBookEntry person = database.findPerson(
-                    lastName );
-
-            if ( person != null ) {
+            personList = database.findPerson(lastName);
+            int i = 0;
+            while ( personList.get(i) != null ) {
 
                // create window to display AddressBookEntry
                AddressBookEntryFrame entryFrame =
                        createAddressBookEntryFrame();
 
                // set AddressBookEntry to display
-               entryFrame.setAddressBookEntry( person );
+               entryFrame.setAddressBookEntry(personList.get(i));
 
                // display window
-               desktop.add( entryFrame );
-               entryFrame.setVisible( true );
+               desktop.add(entryFrame);
+               entryFrame.setVisible(true);
+               i++;
             }
-            else
-               JOptionPane.showMessageDialog( desktop,
-                       "Entry with last name \"" + lastName +
-                               "\" not found in address book" );
+         }
+            else {
+            JOptionPane.showMessageDialog(desktop,
+                    "Entry with last name \"" + lastName +
+                            "\" not found in address book");
+         }
 
-         }  // end "if ( lastName == null )"
+            // end "if ( lastName == null )"
 
       }  // end method actionPerformed
 
