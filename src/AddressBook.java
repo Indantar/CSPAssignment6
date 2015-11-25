@@ -345,36 +345,32 @@ public class AddressBook extends JFrame {
 
          // if last name was input, search for it; otherwise,
          // do nothing
-         List<AddressBookEntry> personList = new ArrayList<>();
-         if ( lastName != null )
-         {
+         if ( lastName != null ) {
 
             // Execute search. If found, AddressBookEntry
             // is returned containing data.
-            personList = database.findPerson(lastName);
-            int i = 0;
-            while ( personList.get(i) != null ) {
+            AddressBookEntry person = database.findPerson(
+                    lastName );
+
+            if ( person != null ) {
 
                // create window to display AddressBookEntry
                AddressBookEntryFrame entryFrame =
                        createAddressBookEntryFrame();
 
                // set AddressBookEntry to display
-               entryFrame.setAddressBookEntry(personList.get(i));
+               entryFrame.setAddressBookEntry( person );
 
                // display window
-               desktop.add(entryFrame);
-               entryFrame.setVisible(true);
-               i++;
+               desktop.add( entryFrame );
+               entryFrame.setVisible( true );
             }
-         }
-            else {
-            JOptionPane.showMessageDialog(desktop,
-                    "Entry with last name \"" + lastName +
-                            "\" not found in address book");
-         }
+            else
+               JOptionPane.showMessageDialog( desktop,
+                       "Entry with last name \"" + lastName +
+                               "\" not found in address book" );
 
-            // end "if ( lastName == null )"
+         }  // end "if ( lastName == null )"
 
       }  // end method actionPerformed
 

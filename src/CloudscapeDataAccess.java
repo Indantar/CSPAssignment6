@@ -143,7 +143,7 @@ public class CloudscapeDataAccess
       Class.forName( driver );
 
       // connect to database
-      connection = DriverManager.getConnection( url,"root","Indantar_123" );
+      connection = DriverManager.getConnection( url,"root","root" );
 
       // Require manual commit for transactions. This enables
       // the program to rollback transactions that do not
