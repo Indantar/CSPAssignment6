@@ -58,8 +58,8 @@ public class CloudscapeDataAccess
       // [This is a Cloudscape-specific database operation.]
       //sqlPersonID = connection.prepareStatement(
       //    "VALUES ConnectionInfo.lastAutoincrementValue( " +
-      //             "'APP', 'NAMES', 'PERSONID')" );
-      sqlPersonID = connection.prepareStatement("select last_insert_id() ");
+      //             "'APP', 'NAMES', 'PERSONID')" );      sqlPersonID = connection.prepareStatement("select last_insert_id() ");
+
       // Insert first and last names in table names.
       // For referential integrity, this must be performed
       // before sqlInsertAddress, sqlInsertPhone and
