@@ -153,7 +153,7 @@ public class CloudscapeDataAccess
 
    // Locate specified person. Method returns AddressBookEntry
    // containing information.
-   public AddressBookEntry findPerson(String lastName )
+   public AddressBookEntry[] findPerson(String lastName )
    {
       try {
          // set query parameter and execute query
@@ -163,28 +163,32 @@ public class CloudscapeDataAccess
          // if no records found, return immediately
          if ( !resultSet.next() )
             return null;
+         AddressBookEntry[] person = new AddressBookEntry[100];
+         int i = 0;
+         while (resultSet.next())
+         {
+            // create new AddressBookEntry
+            person[i] = new AddressBookEntry(
+                    resultSet.getInt( 1 ) );
 
-         // create new AddressBookEntry
-         AddressBookEntry person = new AddressBookEntry(
-                 resultSet.getInt( 1 ) );
+            // set AddressBookEntry properties
+            person[i].setFirstName( resultSet.getString( 2 ) );
+            person[i].setLastName( resultSet.getString( 3 ) );
 
-         // set AddressBookEntry properties
-         person.setFirstName( resultSet.getString( 2 ) );
-         person.setLastName( resultSet.getString( 3 ) );
+            person[i].setAddressID( resultSet.getInt( 4 ) );
+            person[i].setAddress1( resultSet.getString( 5 ) );
+            person[i].setAddress2( resultSet.getString( 6 ) );
+            person[i].setCity( resultSet.getString( 7 ) );
+            person[i].setCounty( resultSet.getString( 8 ) );
+            //person.setZipcode( resultSet.getString( 9 ) );
 
-         person.setAddressID( resultSet.getInt( 4 ) );
-         person.setAddress1( resultSet.getString( 5 ) );
-         person.setAddress2( resultSet.getString( 6 ) );
-         person.setCity( resultSet.getString( 7 ) );
-         person.setCounty( resultSet.getString( 8 ) );
-         //person.setZipcode( resultSet.getString( 9 ) );
+            person[i].setPhoneID( resultSet.getInt( 9 ) );
+            person[i].setPhoneNumber( resultSet.getString( 10 ) );
 
-         person.setPhoneID( resultSet.getInt( 10 ) );
-         person.setPhoneNumber( resultSet.getString( 11 ) );
-
-         person.setEmailID( resultSet.getInt( 12 ) );
-         person.setEmailAddress( resultSet.getString( 13 ) );
-
+            person[i].setEmailID( resultSet.getInt( 11 ) );
+            person[i].setEmailAddress( resultSet.getString( 12 ) );
+            i++;
+         }
          // return AddressBookEntry
          return person;
       }
