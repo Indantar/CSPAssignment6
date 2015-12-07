@@ -345,34 +345,32 @@ public class AddressBook extends JFrame {
 
          // if last name was input, search for it; otherwise,
          // do nothing
-         AddressBookEntry[] persons = new AddressBookEntry[100];
+
          if ( lastName != null )
          {
-            int i = 0;
+            ArrayList<AddressBookEntry> searchList = database.findPerson(lastName);
             // Execute search. If found, AddressBookEntry
             // is returned containing data.
-            persons = database.findPerson(lastName);
-            if( persons[i] != null )
-            {
-               while(persons[i] != null)// create window to display AddressBookEntry
+            for(int x = 0;x<searchList.size();x++){
+               if( searchList != null )
                {
-                  AddressBookEntryFrame entryFrame =
-                          createAddressBookEntryFrame();
-
-                  // set AddressBookEntry to display
-                  entryFrame.setAddressBookEntry(persons[i]);
-
-                  // display window
-                  desktop.add(entryFrame);
-                  entryFrame.setVisible(true);
-                  i++;
+                  while(searchList != null)// create window to display AddressBookEntry
+                  {
+                     AddressBookEntry getPerson = searchList.get(x);
+                     AddressBookEntryFrame personFrame = createAddressBookEntryFrame();
+                     // set AddressBookEntry to display
+                     personFrame.setAddressBookEntry(getPerson);
+                     // display window
+                     personFrame.setSize(500,500);
+                     desktop.add(personFrame);
+                     personFrame.setVisible(true);
+                  }
                }
+               else
+                  JOptionPane.showMessageDialog( desktop,
+                          "Entry with last name \"" + lastName +
+                                  "\" not found in address book" );
             }
-            else
-               JOptionPane.showMessageDialog( desktop,
-                       "Entry with last name \"" + lastName +
-                               "\" not found in address book" );
-
          }  // end "if ( lastName == null )"
 
       }  // end method actionPerformed

@@ -4,6 +4,7 @@
 
 // Java core packages
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CloudscapeDataAccess
@@ -47,7 +48,7 @@ public class CloudscapeDataAccess
               "SELECT names.personID, firstName, lastName, " +
                       "addressID, address1, address2, city, county, " +
                       "phoneID, phoneNumber, emailID, " +
-                      "emailAddress " +
+                      "emailAddress, extraAddress1, extraAddress2, extraCity, extraCounty, extraPhoneNumber, extraEmailAddress " +
                       "FROM names, addresses, phoneNumbers, emailAddresses " +
                       "WHERE lastName = ? AND " +
                       "names.personID = addresses.personID AND " +
@@ -71,20 +72,20 @@ public class CloudscapeDataAccess
       // insert address in table addresses
       sqlInsertAddress = connection.prepareStatement(
               "INSERT INTO addresses ( personID, address1, " +
-                      "address2, city, county) " +
-                      "VALUES ( ? , ? , ? , ? , ? )" );
+                      "address2, city, county, extraAddress1, extraAddress2, extraCity, extraCounty) " +
+                      "VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ?)" );
 
       // insert phone number in table phoneNumbers
       sqlInsertPhone = connection.prepareStatement(
               "INSERT INTO phoneNumbers " +
-                      "( personID, phoneNumber) " +
-                      "VALUES ( ? , ? )" );
+                      "( personID, phoneNumber, extraPhoneNumber) " +
+                      "VALUES ( ? , ? , ?)" );
 
       // insert email in table emailAddresses
       sqlInsertEmail = connection.prepareStatement(
               "INSERT INTO emailAddresses " +
-                      "( personID, emailAddress ) " +
-                      "VALUES ( ? , ? )" );
+                      "( personID, emailAddress, extraEmailAddress ) " +
+                      "VALUES ( ? , ? , ?)" );
 
       // update first and last names in table names
       sqlUpdateName = connection.prepareStatement(
@@ -93,18 +94,17 @@ public class CloudscapeDataAccess
 
       // update address in table addresses
       sqlUpdateAddress = connection.prepareStatement(
-              "UPDATE addresses SET address1 = ?, address2 = ?, " +
-                      "city = ?, county = ?" +
+              "UPDATE addresses SET address1 = ?, address2 = ?, city = ?, county = ?, extraAddress1 = ?, extraAddress2 = ?, extraCity = ?, extraCounty = ? ,city = ?, county = ?" +
                       "WHERE addressID = ?" );
 
       // update phone number in table phoneNumbers
       sqlUpdatePhone = connection.prepareStatement(
-              "UPDATE phoneNumbers SET phoneNumber = ? " +
+              "UPDATE phoneNumbers SET phoneNumber = ?, extraPhoneNumber = ? " +
                       "WHERE phoneID = ?" );
 
       // update email in table emailAddresses
       sqlUpdateEmail = connection.prepareStatement(
-              "UPDATE emailAddresses SET emailAddress = ? " +
+              "UPDATE emailAddresses SET emailAddress = ?, extraEmailAddress = ? " +
                       "WHERE emailID = ?" );
 
       // Delete row from table names. This must be executed
@@ -153,44 +153,50 @@ public class CloudscapeDataAccess
 
    // Locate specified person. Method returns AddressBookEntry
    // containing information.
-   public AddressBookEntry[] findPerson(String lastName )
+   public ArrayList<AddressBookEntry> findPerson(String lastName )
    {
       try {
+         ArrayList<AddressBookEntry> searchList = new ArrayList<>();
          // set query parameter and execute query
          sqlFind.setString( 1, lastName );
          ResultSet resultSet = sqlFind.executeQuery();
 
          // if no records found, return immediately
-         if ( !resultSet.next() )
-            return null;
-         AddressBookEntry[] person = new AddressBookEntry[100];
-         int i = 0;
          while (resultSet.next())
          {
             // create new AddressBookEntry
-            person[i] = new AddressBookEntry(
-                    resultSet.getInt( 1 ) );
+            AddressBookEntry person = new AddressBookEntry(
+                    resultSet.getInt(1));
 
             // set AddressBookEntry properties
-            person[i].setFirstName( resultSet.getString( 2 ) );
-            person[i].setLastName( resultSet.getString( 3 ) );
+            person.setFirstName(resultSet.getString(2));
+            person.setLastName(resultSet.getString(3));
 
-            person[i].setAddressID( resultSet.getInt( 4 ) );
-            person[i].setAddress1( resultSet.getString( 5 ) );
-            person[i].setAddress2( resultSet.getString( 6 ) );
-            person[i].setCity( resultSet.getString( 7 ) );
-            person[i].setCounty( resultSet.getString( 8 ) );
-            //person.setZipcode( resultSet.getString( 9 ) );
+            person.setAddressID(resultSet.getInt(4));
+            person.setAddress1(resultSet.getString(5));
+            person.setAddress2(resultSet.getString(6));
+            person.setCity(resultSet.getString(7));
+            person.setCounty(resultSet.getString(8));
 
-            person[i].setPhoneID( resultSet.getInt( 9 ) );
-            person[i].setPhoneNumber( resultSet.getString( 10 ) );
+            person.setExtraAddress1(resultSet.getString(10));
+            person.setExtraAddress2(resultSet.getString(11));
+            person.setExtraCity(resultSet.getString(12));
+            person.setExtraCounty(resultSet.getString(13));
 
-            person[i].setEmailID( resultSet.getInt( 11 ) );
-            person[i].setEmailAddress( resultSet.getString( 12 ) );
-            i++;
+
+            person.setPhoneID(resultSet.getInt(14));
+            person.setPhoneNumber(resultSet.getString(15));
+            person.setExtraPhoneNumber(resultSet.getString(16));
+
+            person.setEmailID(resultSet.getInt(17));
+            person.setEmailAddress(resultSet.getString(18));
+            person.setExtraEmailAddress(resultSet.getString(19));
+            searchList.add(person);
+
+            // return AddressBookEntry
          }
          // return AddressBookEntry
-         return person;
+         return searchList;
       }
 
       // catch SQLException
@@ -225,8 +231,11 @@ public class CloudscapeDataAccess
          sqlUpdateAddress.setString( 2, person.getAddress2() );
          sqlUpdateAddress.setString( 3, person.getCity() );
          sqlUpdateAddress.setString( 4, person.getCounty() );
-         //sqlUpdateAddress.setString( 5, person.getZipcode() );
-         sqlUpdateAddress.setInt( 5, person.getAddressID() );
+         sqlUpdateAddress.setString( 5, person.getExtraAddress1() );
+         sqlUpdateAddress.setString( 6, person.getExtraAddress2() );
+         sqlUpdateAddress.setString( 7, person.getExtraCity() );
+         sqlUpdateAddress.setString( 8, person.getExtraCounty() );
+         sqlUpdateAddress.setInt( 9, person.getAddressID() );
          result = sqlUpdateAddress.executeUpdate();
 
          // if update fails, rollback and discontinue
@@ -237,7 +246,8 @@ public class CloudscapeDataAccess
 
          // update phoneNumbers table
          sqlUpdatePhone.setString( 1, person.getPhoneNumber() );
-         sqlUpdatePhone.setInt( 2, person.getPhoneID() );
+         sqlUpdatePhone.setString( 2, person.getExtraPhoneNumber());
+         sqlUpdatePhone.setInt( 3, person.getPhoneID() );
          result = sqlUpdatePhone.executeUpdate();
 
          // if update fails, rollback and discontinue
@@ -248,7 +258,8 @@ public class CloudscapeDataAccess
 
          // update emailAddresses table
          sqlUpdateEmail.setString( 1, person.getEmailAddress() );
-         sqlUpdateEmail.setInt( 2, person.getEmailID() );
+         sqlUpdateEmail.setString( 2, person.getExtraEmailAddress() );
+         sqlUpdateEmail.setInt( 3, person.getEmailID() );
          result = sqlUpdateEmail.executeUpdate();
 
          // if update fails, rollback and discontinue
@@ -305,16 +316,14 @@ public class CloudscapeDataAccess
 
             // insert address in addresses table
             sqlInsertAddress.setInt( 1, personID );
-            sqlInsertAddress.setString( 2,
-                    person.getAddress1() );
-            sqlInsertAddress.setString( 3,
-                    person.getAddress2() );
-            sqlInsertAddress.setString( 4,
-                    person.getCity() );
-            sqlInsertAddress.setString( 5,
-                    person.getCounty() );
-            //sqlInsertAddress.setString( 6,
-            //        person.getZipcode() );
+            sqlInsertAddress.setString( 2, person.getAddress1() );
+            sqlInsertAddress.setString( 3, person.getAddress2() );
+            sqlInsertAddress.setString( 4, person.getCity() );
+            sqlInsertAddress.setString( 5, person.getCounty() );
+            sqlInsertAddress.setString( 6, person.getExtraAddress1());
+            sqlInsertAddress.setString( 7, person.getExtraAddress2() );
+            sqlInsertAddress.setString( 8, person.getExtraCity() );
+            sqlInsertAddress.setString( 9, person.getExtraCounty() );
             result = sqlInsertAddress.executeUpdate();
 
             // if insert fails, rollback and discontinue
@@ -325,8 +334,8 @@ public class CloudscapeDataAccess
 
             // insert phone number in phoneNumbers table
             sqlInsertPhone.setInt( 1, personID );
-            sqlInsertPhone.setString( 2,
-                    person.getPhoneNumber() );
+            sqlInsertPhone.setString( 2, person.getPhoneNumber() );
+            sqlInsertPhone.setString( 3, person.getExtraPhoneNumber() );
             result = sqlInsertPhone.executeUpdate();
 
             // if insert fails, rollback and discontinue
@@ -337,8 +346,8 @@ public class CloudscapeDataAccess
 
             // insert email address in emailAddresses table
             sqlInsertEmail.setInt( 1, personID );
-            sqlInsertEmail.setString( 2,
-                    person.getEmailAddress() );
+            sqlInsertEmail.setString( 2, person.getEmailAddress() );
+            sqlInsertEmail.setString( 3, person.getExtraEmailAddress() );
             result = sqlInsertEmail.executeUpdate();
 
             // if insert fails, rollback and discontinue
