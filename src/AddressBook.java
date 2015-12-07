@@ -351,20 +351,18 @@ public class AddressBook extends JFrame {
             ArrayList<AddressBookEntry> searchList = database.findPerson(lastName);
             // Execute search. If found, AddressBookEntry
             // is returned containing data.
-            for(int x = 0;x<searchList.size();x++){
+            for(int x = 0; x < searchList.size(); x++)
+            {
                if( searchList != null )
                {
-                  while(searchList != null)// create window to display AddressBookEntry
-                  {
-                     AddressBookEntry getPerson = searchList.get(x);
-                     AddressBookEntryFrame personFrame = createAddressBookEntryFrame();
-                     // set AddressBookEntry to display
-                     personFrame.setAddressBookEntry(getPerson);
-                     // display window
-                     personFrame.setSize(500,500);
-                     desktop.add(personFrame);
-                     personFrame.setVisible(true);
-                  }
+                  AddressBookEntry getPerson = searchList.get(x);
+                  AddressBookEntryFrame personFrame = createAddressBookEntryFrame();
+                  // set AddressBookEntry to display
+                  personFrame.setAddressBookEntry(getPerson);
+                  // display window
+                  personFrame.setSize(600,600);
+                  desktop.add(personFrame);
+                  personFrame.setVisible(true);
                }
                else
                   JOptionPane.showMessageDialog( desktop,

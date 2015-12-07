@@ -46,9 +46,9 @@ public class CloudscapeDataAccess
       // locate person
       sqlFind = connection.prepareStatement(
               "SELECT names.personID, firstName, lastName, " +
-                      "addressID, address1, address2, city, county, " +
-                      "phoneID, phoneNumber, emailID, " +
-                      "emailAddress, extraAddress1, extraAddress2, extraCity, extraCounty, extraPhoneNumber, extraEmailAddress " +
+                      "addressID, address1, address2, city, county,extraAddress1, extraAddress2, extraCity, extraCounty, " +
+                      "phoneID, phoneNumber,extraPhoneNumber, emailID, " +
+                      "emailAddress, extraEmailAddress " +
                       "FROM names, addresses, phoneNumbers, emailAddresses " +
                       "WHERE lastName = ? AND " +
                       "names.personID = addresses.personID AND " +
@@ -60,7 +60,7 @@ public class CloudscapeDataAccess
       //sqlPersonID = connection.prepareStatement(
       //    "VALUES ConnectionInfo.lastAutoincrementValue( " +
       //             "'APP', 'NAMES', 'PERSONID')" );      sqlPersonID = connection.prepareStatement("select last_insert_id() ");
-
+      sqlPersonID = connection.prepareStatement("SELECT last_insert_id()");
       // Insert first and last names in table names.
       // For referential integrity, this must be performed
       // before sqlInsertAddress, sqlInsertPhone and
@@ -171,26 +171,21 @@ public class CloudscapeDataAccess
             // set AddressBookEntry properties
             person.setFirstName(resultSet.getString(2));
             person.setLastName(resultSet.getString(3));
-
             person.setAddressID(resultSet.getInt(4));
             person.setAddress1(resultSet.getString(5));
             person.setAddress2(resultSet.getString(6));
             person.setCity(resultSet.getString(7));
             person.setCounty(resultSet.getString(8));
-
-            person.setExtraAddress1(resultSet.getString(10));
-            person.setExtraAddress2(resultSet.getString(11));
-            person.setExtraCity(resultSet.getString(12));
-            person.setExtraCounty(resultSet.getString(13));
-
-
-            person.setPhoneID(resultSet.getInt(14));
-            person.setPhoneNumber(resultSet.getString(15));
-            person.setExtraPhoneNumber(resultSet.getString(16));
-
-            person.setEmailID(resultSet.getInt(17));
-            person.setEmailAddress(resultSet.getString(18));
-            person.setExtraEmailAddress(resultSet.getString(19));
+            person.setExtraAddress1(resultSet.getString(9));
+            person.setExtraAddress2(resultSet.getString(10));
+            person.setExtraCity(resultSet.getString(11));
+            person.setExtraCounty(resultSet.getString(12));
+            person.setPhoneID(resultSet.getInt(13));
+            person.setPhoneNumber(resultSet.getString(14));
+            person.setExtraPhoneNumber(resultSet.getString(15));
+            person.setEmailID(resultSet.getInt(16));
+            person.setEmailAddress(resultSet.getString(17));
+            person.setExtraEmailAddress(resultSet.getString(18));
             searchList.add(person);
 
             // return AddressBookEntry
@@ -310,10 +305,8 @@ public class CloudscapeDataAccess
 
          // determine new personID
          ResultSet resultPersonID = sqlPersonID.executeQuery();
-
          if ( resultPersonID.next() ) {
             int personID =  resultPersonID.getInt( 1 );
-
             // insert address in addresses table
             sqlInsertAddress.setInt( 1, personID );
             sqlInsertAddress.setString( 2, person.getAddress1() );

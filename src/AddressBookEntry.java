@@ -8,7 +8,6 @@ public class AddressBookEntry {
    private String address2 = "";
    private String city = "";
    private String county = "";
-   //private String zipcode = "";
    private String phoneNumber = "";
    private String emailAddress = "";
    private int personID;
@@ -105,19 +104,7 @@ public class AddressBookEntry {
    {
       return county;
    }
-   /*
-   // set person's zip code
-   public void setZipcode( String zip )
-   {
-      zipcode = zip;
-   }
 
-   // get person's zip code
-   public String getZipcode()
-   {
-      return zipcode;
-   }
-   */
    // set person's phone number
    public void setPhoneNumber( String number )
    {
