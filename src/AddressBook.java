@@ -159,7 +159,12 @@ public class AddressBook extends JFrame {
       {
          e.printStackTrace();
       }
-      new AddressBook();
+      SwingUtilities.invokeLater(new Runnable() {
+         @Override
+         public void run() {
+            new AddressBook();
+         }
+      });
    }
 
    // Private inner class defines action that enables

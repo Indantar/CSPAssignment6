@@ -90,7 +90,7 @@ public class AddressBookEntryFrame extends JInternalFrame {
       setField( ALTERNATECOUNTY, person.getExtraCounty() );
       setField( PHONE, person.getPhoneNumber() );
       setField( EMAIL, person.getEmailAddress() );
-      setField( ALTERNATEPHONE, person.getExtraPhoneNumber() );
+      setField( ALTERNATEPHONE, person.getExtraPhoneNumbers() );
       setField( ALTERNATEEMAIL, person.getExtraEmailAddress() );
    }
 
@@ -110,7 +110,7 @@ public class AddressBookEntryFrame extends JInternalFrame {
       person.setExtraCounty( getField( ALTERNATECOUNTY ) );
       person.setPhoneNumber( getField( PHONE ) );
       person.setEmailAddress( getField( EMAIL ) );
-      person.setExtraPhoneNumber( getField( ALTERNATEPHONE ) );
+      person.setExtraPhoneNumbers( getField( ALTERNATEPHONE ) );
       person.setExtraEmailAddress( getField( ALTERNATEEMAIL ) );
 
 

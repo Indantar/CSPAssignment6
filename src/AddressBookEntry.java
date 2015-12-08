@@ -19,7 +19,7 @@ public class AddressBookEntry {
    private String extraAddress2 = "";
    private String extraCity = "";
    private String extraCounty = "";
-   private String extraPhoneNumber = "";
+   private String extraPhoneNumbers = "";
 
 
    // empty constructor
@@ -181,8 +181,9 @@ public class AddressBookEntry {
    public String getExtraCity(){return extraCity;}
    public void setExtraCounty(String county){extraCounty = county;}
    public String getExtraCounty(){return extraCounty;}
-   public void setExtraPhoneNumber(String phoneNum){extraPhoneNumber = phoneNum;}
-   public String getExtraPhoneNumber(){return extraPhoneNumber;}
+   public void setExtraPhoneNumbers(String phoneNum){
+      extraPhoneNumbers = phoneNum;}
+   public String getExtraPhoneNumbers(){return extraPhoneNumbers;}
 }  // end class AddressBookEntry
 
 
